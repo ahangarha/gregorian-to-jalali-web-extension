@@ -1,0 +1,30 @@
+{
+  "name": "gregorian-to-jalali-web-extension",
+  "version": "0.0.1",
+  "description": "This extension makes it easier to quickly see the corresponding Jalali date of a Gregorian date in the selected text on the page.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://framagit.org/ahangarha/gregorian-to-jalali-web-extension.git"
+  },
+  "author": "Mostafa Ahangarha",
+  "license": "AGPL-3.0-or-later",
+  "private": true,
+  "keywords": [
+    "Jalali"
+  ],
+  "scripts": {
+    "start:firefox": "web-ext run",
+    "build": "web-ext build --overwrite-dest",
+    "build-watch": "web-ext build --overwrite-dest --as-needed",
+    "eslint": "eslint .",
+    "eslint-fix": "eslint --fix .",
+    "web-ext-lint": "web-ext lint"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.29.1",
+    "web-ext": "^7.11.0"
+  }
+}
