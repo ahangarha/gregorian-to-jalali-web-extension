@@ -15,6 +15,7 @@
   ],
   "scripts": {
     "start:firefox": "web-ext run",
+    "start:firefox-android": "npx web-ext run -t firefox-android --android-device $ANDROID_DEVICE --firefox-apk $FIREFOX_APK",
     "build": "web-ext build --overwrite-dest",
     "build-watch": "web-ext build --overwrite-dest --as-needed",
     "eslint": "eslint .",
