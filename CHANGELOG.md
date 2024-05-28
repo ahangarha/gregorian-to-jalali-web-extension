@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0] - 2024-05-28
+
 ### Added
 - Set `dir="auto" to the tooltip to show the text in correct direction.
 
@@ -18,5 +20,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.0.1] - 2024-05-27
 Initial release
 
-[unreleased]: https://framagit.org/ahangarha/gregorian-to-jalali-web-extension/-/compare/0.0.1...HEAD
+[unreleased]: https://framagit.org/ahangarha/gregorian-to-jalali-web-extension/-/compare/0.1.0...HEAD
+[0.1.0]: https://framagit.org/ahangarha/gregorian-to-jalali-web-extension/-/compare/0.0.1...0.1.0
 [0.0.1]: https://framagit.org/ahangarha/gregorian-to-jalali-web-extension/-/tags/0.0.1
