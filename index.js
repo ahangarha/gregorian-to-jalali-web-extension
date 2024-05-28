@@ -18,13 +18,35 @@ function getTooltipCoordinate(selection) {
   return { x, y };
 }
 
+function canBeDate(text) {
+  const dateFormatRegex = /^[\S]+?[ /.-][\S]+?[ /.,-]\d{2,4}$/;
+
+  if (/.{6,20}/.test(text)
+    // regex to check different date format
+    && dateFormatRegex.test(text)
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
 function processSelection(selection) {
   const selectionContent = selection.toString().trim();
+
+  if (!canBeDate(selectionContent)) return null;
 
   const theTimestamp = Date.parse(selectionContent);
   if (!theTimestamp) return null;
 
   return new Date(theTimestamp).toLocaleString('fa').toString().split(', ')[0];
+}
+
+function removeTooltip(tooltip) {
+  // eslint-disable-next-line no-param-reassign
+  tooltip.textContent = '';
+  // eslint-disable-next-line no-param-reassign
+  tooltip.style.display = 'none';
 }
 
 createTooltipElement();
@@ -33,15 +55,12 @@ document.onselectionchange = () => {
   const selection = window.getSelection();
   const tooltipElement = document.getElementById(TOOLTIP_ELEMENT_ID);
 
-  if (!selection.rangeCount || selection.isCollapsed) {
-    tooltipElement.textContent = '';
-    tooltipElement.style.display = 'none';
-    return;
-  }
-
   const tooltipContent = processSelection(selection);
 
-  if (!tooltipContent) return;
+  if (!tooltipContent) {
+    removeTooltip(tooltipElement);
+    return;
+  }
 
   const { x, y } = getTooltipCoordinate(selection);
 
