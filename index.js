@@ -39,7 +39,10 @@ function processSelection(selection) {
   const theTimestamp = Date.parse(selectionContent);
   if (!theTimestamp) return null;
 
-  return new Date(theTimestamp).toLocaleString('fa').toString().split(', ')[0];
+  const gregorianDate = new Date(theTimestamp);
+  if (gregorianDate.getFullYear() < 0) return null;
+
+  return gregorianDate.toLocaleString('fa-IR', { dateStyle: 'long' });
 }
 
 function removeTooltip(tooltip) {
