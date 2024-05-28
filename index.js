@@ -3,7 +3,7 @@ const TOOLTIP_ELEMENT_ID = 'gtjwe-tooltip';
 function createTooltipElement() {
   const tooltipElement = document.createElement('div');
   tooltipElement.id = TOOLTIP_ELEMENT_ID;
-  tooltipElement.style = 'position: absolute; background-color: black; color: white; padding: .1rem .5rem; border-radius: 3px; font-size: 1rem; line-height: 1rem z-index: 100; display: none;';
+  tooltipElement.style = 'position: absolute; background-color: black; color: white; padding: .1rem .5rem; border-radius: 3px; font-size: 1rem; line-height: 1rem z-index: 100; display: none; transform: translateX(-50%);';
   tooltipElement.textContent = '';
   tooltipElement.dir = 'auto';
   document.getElementsByTagName('body')[0].appendChild(tooltipElement);

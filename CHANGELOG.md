@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Improve the functionality by checking for a certain format before processing the selected text.
 - Show the month name in long format.
+- Show the tooltip at the center of the selection rectangle
 
 ## [0.0.1] - 2024-05-27
 Initial release
