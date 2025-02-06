@@ -32,7 +32,7 @@ function canBeDate(text) {
     /^\d{4}[\/\-.]\d{1,2}[\/\-.]\d{1,2}$/,
 
     // Day or Month at first: 
-    // "D/M/Y" or "D-M-Y" or "D.M.Y" or etc.
+    // "M/D/Y" or "M-D-Y" or "M.D.Y" or etc.
     /^\d{1,2}[\/\-.]\d{1,2}[\/\-.]\d{2,4}$/,
 
     // Month name (full or short) followed by day and year:
