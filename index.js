@@ -19,20 +19,37 @@ function getTooltipCoordinate(selection) {
 }
 
 function canBeDate(text) {
-  const dateFormatRegex = /^[\S]+?[ /.-][\S]+?[ /.,-]\d{2,4}$/;
+  // remove extra spaces at the beginning or end:
+  text = text.trim();
 
-  if (/.{6,20}/.test(text)
-    // regex to check different date format
-    && dateFormatRegex.test(text)
-  ) {
-    return true;
+  if (!/^.{6,30}$/.test(text)) {
+    return false;
   }
 
-  return false;
+  const datePatterns = [
+    // ISO format dates:
+    // "Y-M-D" or "Y/M/D" or "Y.M.D"
+    /^\d{4}[\/\-.]\d{1,2}[\/\-.]\d{1,2}$/,
+
+    // Day or Month at first: 
+    // "M/D/Y" or "M-D-Y" or "M.D.Y" or etc.
+    /^\d{1,2}[\/\-.]\d{1,2}[\/\-.]\d{2,4}$/,
+
+    // Month name (full or short) followed by day and year:
+    // "M D, Y" or "M D Y"
+    /^(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+\d{1,2}(?:st|nd|rd|th)?,?\s+\d{2,4}$/i,
+
+    // Day followed by month name (full or short) and year:
+    // "D M, Y" or "D M Y"
+    /^\d{1,2}(?:st|nd|rd|th)?\s+(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?),?\s+\d{2,4}$/i,
+  ];
+
+  return datePatterns.some(regex => regex.test(text));
 }
 
 function processSelection(selection) {
-  const selectionContent = selection.toString().trim();
+  // trim, then remove st, nd, rd, th from day numbers if exist:
+  const selectionContent = selection.toString().trim().replace(/\b(\d+)(st|nd|rd|th)\b/gi, '$1');
 
   if (!canBeDate(selectionContent)) return null;
 
