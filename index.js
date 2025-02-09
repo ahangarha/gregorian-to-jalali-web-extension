@@ -19,21 +19,16 @@ function getTooltipCoordinate(selection) {
 }
 
 function canBeDate(text) {
-  // remove extra spaces at the beginning or end:
-  text = text.trim();
-
-  if (!/^.{6,30}$/.test(text)) {
-    return false;
-  }
+  if (!/^.{6,30}$/.test(text)) return false;
 
   const datePatterns = [
     // ISO format dates:
     // "Y-M-D" or "Y/M/D" or "Y.M.D"
-    /^\d{4}[\/\-.]\d{1,2}[\/\-.]\d{1,2}$/,
+    /^\d{4}[/\-.]\d{1,2}[/\-.]\d{1,2}$/,
 
-    // Day or Month at first: 
+    // Day or Month at first:
     // "M/D/Y" or "M-D-Y" or "M.D.Y" or etc.
-    /^\d{1,2}[\/\-.]\d{1,2}[\/\-.]\d{2,4}$/,
+    /^\d{1,2}[/\-.]\d{1,2}[/\-.]\d{2,4}$/,
 
     // Month name (full or short) followed by day and year:
     // "M D, Y" or "M D Y"
@@ -44,7 +39,7 @@ function canBeDate(text) {
     /^\d{1,2}(?:st|nd|rd|th)?\s+(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?),?\s+\d{2,4}$/i,
   ];
 
-  return datePatterns.some(regex => regex.test(text));
+  return datePatterns.some((regex) => regex.test(text));
 }
 
 function processSelection(selection) {
