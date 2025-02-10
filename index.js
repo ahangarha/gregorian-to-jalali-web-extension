@@ -1,12 +1,20 @@
-const TOOLTIP_ELEMENT_ID = 'gtjwe-tooltip';
+const TOOLTIP_ELEMENT_ID = "gtjwe-tooltip";
+
+const DATE_PATTERNS = {
+  // YYYY : only a 4-digit year
+  YEAR: /^(\d{2,4})$/i,
+  // M Y : year and month
+  YEAR_MONTH: /^(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s*,?\s*(\d{2,4})$/i,
+}
 
 function createTooltipElement() {
-  const tooltipElement = document.createElement('div');
+  const tooltipElement = document.createElement("div");
   tooltipElement.id = TOOLTIP_ELEMENT_ID;
-  tooltipElement.style = 'position: absolute; background-color: black; color: white; padding: .1rem .5rem; border-radius: 3px; font-size: 1rem; line-height: 1rem z-index: 100; display: none; transform: translateX(-50%);';
-  tooltipElement.textContent = '';
-  tooltipElement.dir = 'auto';
-  document.getElementsByTagName('body')[0].appendChild(tooltipElement);
+  tooltipElement.style =
+    "position: absolute; background-color: black; color: white; padding: .1rem .5rem; border-radius: 3px; font-size: 1rem; line-height: 1rem z-index: 100; display: none; transform: translateX(-50%);";
+  tooltipElement.textContent = "";
+  tooltipElement.dir = "auto";
+  document.getElementsByTagName("body")[0].appendChild(tooltipElement);
 }
 
 function getTooltipCoordinate(selection) {
@@ -43,25 +51,49 @@ function canBeDate(text) {
 }
 
 function processSelection(selection) {
-  // trim, then remove st, nd, rd, th from day numbers if exist:
-  const selectionContent = selection.toString().trim().replace(/\b(\d+)(st|nd|rd|th)\b/gi, '$1');
+  // trim, then remove st, nd, rd, th from day numbers if exist, then remove symbols from start/end
+  const selectionContent = selection.toString().trim().replace(
+    /\b(\d+)(st|nd|rd|th)\b/gi,
+    "$1",
+  ).replace(/(^[-_=\+\(\),\.]|[-_=\+\(\),\.]$)/, "").trim();
 
-  if (!canBeDate(selectionContent)) return null;
+  if (canBeDate(selectionContent)) {
+    const theTimestamp = Date.parse(selectionContent);
+    if (!theTimestamp) return null;
+    // process for an exact date string
+    const gregorianDate = new Date(theTimestamp);
+    if (gregorianDate.getFullYear() < 0) return null;
 
-  const theTimestamp = Date.parse(selectionContent);
-  if (!theTimestamp) return null;
+    return gregorianDate.toLocaleString("fa-IR", { dateStyle: "long" });
 
-  const gregorianDate = new Date(theTimestamp);
-  if (gregorianDate.getFullYear() < 0) return null;
+  } else {
+    // process for an estimaed date (year, or year/month)
+    if (DATE_PATTERNS.YEAR_MONTH.test(selectionContent)) {
+      // year and month
+      const regexMatch = DATE_PATTERNS.YEAR_MONTH.exec(selectionContent)
+      const year = Number(regexMatch[2])
+      const monthName = regexMatch[1]
 
-  return gregorianDate.toLocaleString('fa-IR', { dateStyle: 'long' });
+      // Convert month name to index (0-based)
+      const monthIndex = new Date(`1 ${monthName} ${year}`).getMonth();
+
+      return getEstimatedJalaliString(year, monthIndex);
+
+    } else if (DATE_PATTERNS.YEAR.test(selectionContent)) {
+      // only year
+      const year = Number(DATE_PATTERNS.YEAR.exec(selectionContent)[1])
+      return getEstimatedJalaliString(year);
+    } else {
+      return null;
+    }
+  }
 }
 
 function removeTooltip(tooltip) {
   // eslint-disable-next-line no-param-reassign
-  tooltip.textContent = '';
+  tooltip.textContent = "";
   // eslint-disable-next-line no-param-reassign
-  tooltip.style.display = 'none';
+  tooltip.style.display = "none";
 }
 
 createTooltipElement();
@@ -80,7 +112,7 @@ document.onselectionchange = () => {
   const { x, y } = getTooltipCoordinate(selection);
 
   tooltipElement.textContent = tooltipContent;
-  tooltipElement.style.display = 'block';
+  tooltipElement.style.display = "block";
   tooltipElement.style.left = `${x}px`;
   tooltipElement.style.top = `${y}px`;
 };
