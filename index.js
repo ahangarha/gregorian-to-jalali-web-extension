@@ -2,9 +2,9 @@ const TOOLTIP_ELEMENT_ID = "gtjwe-tooltip";
 
 const DATE_PATTERNS = {
   // YYYY : only a 4-digit year
-  YEAR: /^(\d{2,4})$/i,
+  YEAR: /^(\d{3,4})$/i,
   // M Y : year and month
-  YEAR_MONTH: /^(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s*,?\s*(\d{2,4})$/i,
+  YEAR_MONTH: /^(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s*,?\s*(\d{3,4})$/i,
 }
 
 function createTooltipElement() {
@@ -64,7 +64,9 @@ function processSelection(selection) {
     const gregorianDate = new Date(theTimestamp);
     if (gregorianDate.getFullYear() < 0) return null;
 
-    return gregorianDate.toLocaleString("fa-IR", { dateStyle: "long" });
+    let dateStr = gregorianDate.toLocaleString("fa-IR", { dateStyle: "long" });
+    if (dateStr.includes('−') || dateStr.includes('−')) return null
+    return dateStr;
 
   } else {
     // process for an estimaed date (year, or year/month)

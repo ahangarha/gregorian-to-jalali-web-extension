@@ -13,6 +13,8 @@ function getEstimatedJalaliString(year, month = null) {
         const yearStr1 = onlyYearDateFormatter.format(new Date(year, month, 1));
         const yearStr2 = onlyYearDateFormatter.format(new Date(year, month, 28));
 
+        // check negative years
+        if (yearStr1.includes('−') || yearStr2.includes('−')) return null
 
         // TODO: handle for 31-days months
         let month1 = getJalaliMonthName(year, month, 1)
@@ -37,6 +39,9 @@ function getEstimatedJalaliString(year, month = null) {
     const onlyYearDateFormatter = new Intl.DateTimeFormat("fa-IR", { year: 'numeric' })
     let yearStr1 = onlyYearDateFormatter.format(date1);
     let yearStr2 = onlyYearDateFormatter.format(date2);
+    // check negative years
+    if (yearStr1.includes('−') || yearStr2.includes('−')) return null
+
     if (yearStr1 == yearStr2) {
         return yearStr1;
     }
