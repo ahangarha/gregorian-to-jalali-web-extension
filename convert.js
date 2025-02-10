@@ -19,14 +19,14 @@ function getEstimatedJalaliString(year, month = null) {
         let month2 = getJalaliMonthName(year, month, 28)
         if (month1 == month2) {
             // same month
-            return yearStr1 + " " + month1
+            return month1 + " " + yearStr1
         } else {
             // different month
             // check for different year
             if (yearStr1 == yearStr2) {
-                return `${yearStr1} ${month1}-${month2}`
+                return `${month1}-${month2} ${yearStr1}`
             } else {
-                return `${yearStr1} ${month1} - ${yearStr2} ${month2}`
+                return `${month1} ${yearStr1} - ${month2} ${yearStr2}`
             }
         }
     }
