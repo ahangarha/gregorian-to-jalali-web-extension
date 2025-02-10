@@ -9,10 +9,9 @@ function getEstimatedJalaliString(year, month = null) {
     // process for year and month
     if (month !== null) {
         // get year in jalali time
-        // TODO: check for different years in start and end of the month
-        const dateObj = new Date(year, month, 1)
         const onlyYearDateFormatter = new Intl.DateTimeFormat("fa-IR", { year: 'numeric' })
-        const yearStr = onlyYearDateFormatter.format(dateObj);
+        const yearStr1 = onlyYearDateFormatter.format(new Date(year, month, 1));
+        const yearStr2 = onlyYearDateFormatter.format(new Date(year, month, 28));
 
 
         // TODO: handle for 31-days months
@@ -20,10 +19,15 @@ function getEstimatedJalaliString(year, month = null) {
         let month2 = getJalaliMonthName(year, month, 28)
         if (month1 == month2) {
             // same month
-            return yearStr + " " + month1
+            return yearStr1 + " " + month1
         } else {
             // different month
-            return yearStr + " " + month1 + "-" + month2
+            // check for different year
+            if (yearStr1 == yearStr2) {
+                return `${yearStr1} ${month1}-${month2}`
+            } else {
+                return `${yearStr1} ${month1} - ${yearStr2} ${month2}`
+            }
         }
     }
 
