@@ -1,5 +1,12 @@
 const TOOLTIP_ELEMENT_ID = 'gtjwe-tooltip';
 
+const DATE_LIKE_PATTERNS = {
+  // YYYY : only a 4-digit year
+  YEAR: /^(\d{3,4})$/i,
+  // M Y : year and month
+  YEAR_MONTH: /^(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s*,?\s*(\d{3,4})$/i,
+};
+
 function createTooltipElement() {
   const tooltipElement = document.createElement('div');
   tooltipElement.id = TOOLTIP_ELEMENT_ID;
@@ -43,18 +50,46 @@ function canBeDate(text) {
 }
 
 function processSelection(selection) {
-  // trim, then remove st, nd, rd, th from day numbers if exist:
-  const selectionContent = selection.toString().trim().replace(/\b(\d+)(st|nd|rd|th)\b/gi, '$1');
+  // trim, then remove st, nd, rd, th from day numbers if exist, then remove symbols from start/end
+  const selectionContent = selection.toString().trim().replace(
+    /\b(\d+)(st|nd|rd|th)\b/gi,
+    '$1',
+  ).replace(/(^[-_=+(),.]+|[-_=+(),.]+$)/gm, '') // eslint-disable-line no-useless-escape
+    .trim();
 
-  if (!canBeDate(selectionContent)) return null;
+  if (canBeDate(selectionContent)) {
+    const theTimestamp = Date.parse(selectionContent);
+    if (!theTimestamp) return null;
+    // process for an exact date string
+    const gregorianDate = new Date(theTimestamp);
+    if (gregorianDate.getFullYear() < 0) return null;
 
-  const theTimestamp = Date.parse(selectionContent);
-  if (!theTimestamp) return null;
+    const dateStr = gregorianDate.toLocaleString('fa-IR', { dateStyle: 'long' });
+    if (dateStr.includes('−') || dateStr.includes('−')) return null;
+    return dateStr;
+  }
+  // process for an estimaed date (year, or year/month)
+  if (DATE_LIKE_PATTERNS.YEAR_MONTH.test(selectionContent)) {
+    // year and month
+    const regexMatch = DATE_LIKE_PATTERNS.YEAR_MONTH.exec(selectionContent);
+    const year = Number(regexMatch[2]);
+    const monthName = regexMatch[1];
 
-  const gregorianDate = new Date(theTimestamp);
-  if (gregorianDate.getFullYear() < 0) return null;
+    // Convert month name to index (0-based)
+    const monthIndex = new Date(`1 ${monthName} ${year}`).getMonth();
 
-  return gregorianDate.toLocaleString('fa-IR', { dateStyle: 'long' });
+    // defined in other file
+    // eslint-disable-next-line no-undef
+    return getEstimatedJalaliString(year, monthIndex);
+  } if (DATE_LIKE_PATTERNS.YEAR.test(selectionContent)) {
+    // only year
+    const year = Number(DATE_LIKE_PATTERNS.YEAR.exec(selectionContent)[1]);
+
+    // defined in other file
+    // eslint-disable-next-line no-undef
+    return getEstimatedJalaliString(year);
+  }
+  return null;
 }
 
 function removeTooltip(tooltip) {

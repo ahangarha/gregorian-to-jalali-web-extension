@@ -11,7 +11,10 @@
       "matches": [
         "<all_urls>"
       ],
-      "js": ["./index.js"]
+      "js": [
+        "./convert.js",
+        "./index.js"
+      ]
     }
   ]
 }
